@@ -9,18 +9,20 @@
 {% block content %}
 {% csrf_token %}
 {% if posts or users %}
-
-            <p>Found {{ posts|length }} post{{ posts|pluralize }}, and {{ users|length }} user{{ users|pluralize }}</p>
+ <p>Found {{ posts|length }} post{{ posts|pluralize }}, and {{ users|length }} user{{ users|pluralize }}</p>
             
-           <ul class="nav nav-tabs  text-muted">
+           <ul class="nav nav-pills  text-muted">
   
-  <li class="nav-item"><a class="nav-link  text-muted active" data-toggle="tab" href="#post">Posts</a></li>
-  <li class="nav-item"><a class="nav-link  text-muted" data-toggle="tab" href="#user">Users</a></li>
+  <li class="nav-item"><a class="nav-link  text-muted  active" data-toggle="tab" href="#post">Post{{ posts|pluralize }}({{ posts|length }}) </a></li>
+  <li class="nav-item"><a class="nav-link  text-muted" data-toggle="tab" href="#user">User{{ users|pluralize }}({{ users|length }})</a></li>
 </ul>
 
 <div class="tab-content border text-muted ">
   
-  <div id="post" class="tab-pane  text-muted fade  active">
+           
+
+  </div>
+  <div id="post" class="tab-pane fade show active text-muted ">
    
     {% if posts|length > 0 %}
    <p> {% for post in posts %}
@@ -57,5 +59,6 @@
       {% endif %}
   </div>
 </div>
+
 {% endif %}
 {% endblock %}
