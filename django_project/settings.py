@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-import django_heroku
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -82,8 +82,6 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-
-
 }
 
 
@@ -139,4 +137,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'alfrih.feras@gmail.com'
 EMAIL_HOST_PASSWORD = 'Feras1985!@'
 # Activate Django-Heroku.
-django_heroku.settings(locals())

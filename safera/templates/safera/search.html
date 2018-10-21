@@ -1,0 +1,48 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block title %} SaferaTech {% endblock %}
+
+{% block content %}
+{% csrf_token %}
+{% if posts or users %}
+
+            <p>Found {{ posts|length }} post{{ posts|pluralize }}, and {{ users|length }} user{{ users|pluralize }}</p>
+            <ul>
+            {% if posts|length > 0 %}
+              <legend class="border-bottom mb-4">Post{{ posts|pluralize }}:</legend>
+            {% endif %}
+                {% for post in posts %}
+                <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{% url 'user-posts' post.author.username %}">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+                {% endfor %}
+                {% if users|length > 0 %}
+               <legend class="border-bottom mb-4">user{{ users|pluralize }}:</legend>
+                 {% endif %}
+          {% for user in users %}
+                <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ user.profile.image.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <h3><a class="mr-2" style="font-family: palatino" href="{% url 'user-posts' user.username %}">Username: {{ user.username }}</a></h3>
+              </div><br>
+              <p class="mr-2" style="font-family: palatino">First Name: {{ user.first_name }}</p><br>
+              <p class="mr-2" style="font-family: palatino">Last Name: {{ user.last_name }}</p> <br>
+            </article>
+              {% endfor %}
+            </ul>
+
+        {% else %}
+            <p>No match was found </p>
+        {% endif %}
+
+{% endblock %}

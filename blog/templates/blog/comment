@@ -1,0 +1,66 @@
+models
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        'blog.Post', on_delete=models.CASCADE, related_name='comments')
+    author = models.CharField(max_length=200)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
+    approved_comment = models.BooleanField(default=False)
+
+    def approve(self):
+        self.approved_comment = True
+        self.save()
+
+    def __str__(self):
+        return self.text
+
+
+forms
+from .models import Post, Comment
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('author', 'text',)
+
+views
+
+def add_comment_to_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentForm()
+    return render(request, 'blog/add_comment_to_post.html', {'form': form})
+
+urls
+    path('post/<int:pk>/delete/',
+         views.add_comment_to_post, name='add_comment_to_post'),
+
+post_detail.html
+  
+    <a role= "button" class="dropmdown btn btn-info" data-toggle="dropdown" id="cmnt" aria-haspopup="true" href="{% url 'post-detail' pk=post.pk %}">Comments: {{ post.comments.count }}</a>
+    <div class="dropdown-menu " aria-labeledby= "cmnt">
+      <hr>
+{% for comment in post.comments.all %}
+    <div class="comment dropdown-item">
+        <div class="date dropdown-item">{{ comment.created_date }}</div>
+        <strong class="dropdown-item">{{ comment.author }}</strong>
+        <p class="dropdown-item">{{ comment.text|linebreaks }}</p>
+    </div>
+     <div class="dropdown-divider"></div>
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
+    </div>
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+    </div>
+  </article>
